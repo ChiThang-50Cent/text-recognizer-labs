@@ -34,7 +34,7 @@ def get_device():
     device = torch.device("cpu")
   return device
 
-def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer, device):
+def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer, scheduler, device):
   
   for epoch in range(n_epochs):
 
@@ -53,6 +53,7 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
       loss = loss_fn(y_hat, y)
       loss.backward()
       optimizer.step()
+      scheduler.step()
 
       total_train_loss += loss.item()
 
