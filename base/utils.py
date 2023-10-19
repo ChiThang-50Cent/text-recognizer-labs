@@ -82,5 +82,5 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
         total_val_loss += loss.item()
         total_val_acc += flat_acc(y_hat, y)
 
-    print(f'Valid loss {total_val_loss/len(val_loader):.2f}.')
-    print(f'Valid acc {total_val_acc/len(val_loader):.2f}.')
+    print(f'Valid loss {total_val_loss/len(val_loader):.2f}.', end=' ')
+    print(f'Valid acc {total_val_acc/len(val_loader):.2f}.', end=' ')
