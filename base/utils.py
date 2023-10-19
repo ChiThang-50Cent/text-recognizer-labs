@@ -27,6 +27,12 @@ def set_all_seed(seed_val):
   torch.manual_seed(seed_val)
   torch.cuda.manual_seed_all(seed_val)
 
+def flat_acc(y_hat , y_true):
+  test = y_hat.softmax(dim=1).argmax(dim=1).numpy()
+  y_test = y_true.numpy()
+
+  return np.sum(test==y_test) / len(test)
+
 def get_device():
   if torch.cuda.is_available():
     device = torch.device("cuda")
@@ -57,11 +63,11 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
 
       total_train_loss += loss.item()
 
-    print(f'Train loss {total_train_loss/len(train_loader)}.', end=' ')
+    print(f'Train loss {total_train_loss/len(train_loader):.2f}.', end=' ')
 
     model.eval()
     total_val_loss = 0
-
+    total_val_acc = 0
     with torch.no_grad():
       for batch in val_loader:
         batch = (t.to(device) for t in batch)
@@ -69,6 +75,12 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
 
         y_hat = model(X)
         loss = loss_fn(y_hat, y)
-        total_val_loss += loss.item()
 
-    print(f'Valid loss {total_val_loss/len(val_loader)}.')
+        y_hat = y_hat.detach().cpu()
+        y = y.to('cpu')
+
+        total_val_loss += loss.item()
+        total_val_acc += flat_acc(y_hat, y)
+
+    print(f'Valid loss {total_val_loss/len(val_loader):.2f}.')
+    print(f'Valid acc {total_val_acc/len(val_loader):.2f}.')
