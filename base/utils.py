@@ -55,9 +55,11 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
       X, y = batch
 
       optimizer.zero_grad()
+
       y_hat = model(X)
       loss = loss_fn(y_hat, y)
       loss.backward()
+
       optimizer.step()
       scheduler.step()
 
@@ -65,10 +67,10 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
 
     print(f'Train loss {total_train_loss/len(train_loader):.2f}.', end=' ')
 
-    model.eval()
     total_val_loss = 0
     total_val_acc = 0
     with torch.no_grad():
+      model.eval()
       for batch in val_loader:
         batch = (t.to(device) for t in batch)
         X, y = batch
