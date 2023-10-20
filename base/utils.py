@@ -61,7 +61,9 @@ def training_loop(n_epochs, model, train_loader, val_loader, loss_fn, optimizer,
       loss.backward()
 
       optimizer.step()
-      scheduler.step()
+      
+      if scheduler:
+        scheduler.step()
 
       total_train_loss += loss.item()
 
