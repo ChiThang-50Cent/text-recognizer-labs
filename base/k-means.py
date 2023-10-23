@@ -59,7 +59,7 @@ def kmeans(
     initial_state = initialize(X, num_clusters)
 
     while True:
-        dis = pairwise_distance_function(X, initial_state)
+        dis = pairwise_distance_function(X, initial_state, device)
 
         choice_cluster = torch.argmin(dis, dim=1)
 
@@ -76,7 +76,7 @@ def kmeans(
                 torch.sum((initial_state - initial_state_pre) ** 2, dim=1)
             ))
 
-        if center_shift ** 2 < tol:
+        if center_shift ** 2 <= tol:
             break
 
     return choice_cluster.cpu(), initial_state.cpu()
